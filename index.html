@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Player Saya</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #202020; /* Latar belakang gelap agar fokus */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: sans-serif;
+        }
+        #flash-container {
+            /* Sesuaikan ukuran di sini jika perlu */
+            width: 800px;
+            height: 600px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="flash-container"></div>
+
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <script>
+        window.RufflePlayer = window.RufflePlayer || {};
+        window.addEventListener("load", (event) => {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById("flash-container");
+            
+            container.appendChild(player);
+            
+            // PENTING: Nama file di bawah ini harus sama dengan nama file SWF Anda
+            player.load("game.swf"); 
+        });
+    </script>
+
+</body>
+</html>
