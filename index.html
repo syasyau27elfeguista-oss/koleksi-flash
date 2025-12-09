@@ -3,33 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash Player Saya</title>
+    <title>Flash Player dengan Zoom</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #202020; /* Latar belakang gelap agar fokus */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
+            background-color: #202020;
             font-family: sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Mencegah body scroll ganda */
         }
+
+        /* Area Tombol Kontrol */
+        #controls {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        button {
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Area Scroll (Wadah Luar) */
+        #scroll-wrapper {
+            flex: 1;
+            overflow: auto; /* Munculkan scrollbar jika konten membesar */
+            display: flex;
+            justify-content: center; /* Posisi tengah horizontal */
+            align-items: center; /* Posisi tengah vertikal */
+            background-color: #2a2a2a;
+        }
+
+        /* Area Player (Wadah Dalam) */
         #flash-container {
-            /* Sesuaikan ukuran di sini jika perlu */
+            /* Ukuran Awal */
             width: 800px;
             height: 600px;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: width 0.2s, height 0.2s; /* Animasi halus saat zoom */
         }
     </style>
 </head>
 <body>
 
-    <div id="flash-container"></div>
+    <div id="controls">
+        <button onclick="ubahZoom(1.2)">🔍 Perbesar (+)</button>
+        <button onclick="ubahZoom(0.8)">🔍 Perkecil (-)</button>
+        <button onclick="resetZoom()">↺ Reset Ukuran</button>
+    </div>
+
+    <div id="scroll-wrapper">
+        <div id="flash-container"></div>
+    </div>
 
     <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
     <script>
+        // --- KONFIGURASI UKURAN AWAL ---
+        const widthAwal = 800;
+        const heightAwal = 600;
+        
+        // Simpan ukuran saat ini
+        let currentWidth = widthAwal;
+        let currentHeight = heightAwal;
+
         window.RufflePlayer = window.RufflePlayer || {};
         window.addEventListener("load", (event) => {
             const ruffle = window.RufflePlayer.newest();
@@ -38,9 +91,32 @@
             
             container.appendChild(player);
             
-            // PENTING: Nama file di bawah ini harus sama dengan nama file SWF Anda
+            // GANTI SESUAI NAMA FILE ANDA
             player.load("game.swf"); 
         });
+
+        // --- FUNGSI ZOOM ---
+        function ubahZoom(faktor) {
+            const container = document.getElementById("flash-container");
+            
+            // Hitung ukuran baru
+            currentWidth = currentWidth * faktor;
+            currentHeight = currentHeight * faktor;
+
+            // Terapkan ke CSS
+            container.style.width = currentWidth + "px";
+            container.style.height = currentHeight + "px";
+        }
+
+        function resetZoom() {
+            const container = document.getElementById("flash-container");
+            
+            currentWidth = widthAwal;
+            currentHeight = heightAwal;
+
+            container.style.width = currentWidth + "px";
+            container.style.height = currentHeight + "px";
+        }
     </script>
 
 </body>
